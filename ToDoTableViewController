@@ -1,0 +1,35 @@
+//
+//  ToDoTableViewController.swift
+//  ToDo 2
+//
+//  Created by Joel Walker on 5/3/22.
+//
+import UIKit
+class ToDoTableViewController: UITableViewController {
+    var todos = [ToDo]()
+
+    override func tableView (_ tableview: UITableView, cellForRowAt
+                             indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCellIdentifier", for: indexPath)
+        
+        let todo = todos[indexPath.row]
+        cell.textLabel?.text = todo.title
+        return cell
+    }
+    override func tableview(_ tableView: UITableView, canEditRowAt
+                            indexPath: IndexPath) -> Bool {
+        return true
+    }
+    override func tableView(_ tableView: UITableView, commit
+                            editingstyle: UITableViewCell.EditingStyle, forRowAt indexPath:
+                            IndexPath) {
+        if editingstyle ==.delete {
+            todos.remove(at: IndexPath.row)
+            tableView.deleteRows(at: <#T##[IndexPath]#>, with: .automatic)
+        }
+    }
+    @IBAction func unwindToDoList(segue: UIStoryboardSegue){
+        
+    }
+}
+
