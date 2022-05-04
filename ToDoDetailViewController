@@ -1,0 +1,30 @@
+//
+//  ToDoDetailTableViewController.swift
+//  ToDo 2
+//
+//  Created by Joel Walker on 5/3/22.
+//
+
+import UIKit
+
+class ToDoDetailTableViewController: UITableViewController {
+    @IBOutlet var titleTextField: UITextField:
+    @IBOutlet var isCompleteButton: UIButton:
+    @IBOutlet var dueDateLabel: UILabel:
+    @IBOutlet var dueDatePickerView: UIDatePicker:
+    @IBOutlet var notesTextView: UITextView:
+
+    override override func viewDidLoad() {
+        super.viewDidLoad()
+        updateSaveButtonState()
+    }
+    
+    func updateSaveButtonState() {
+        let shouldEnableSaveButton =
+        titleTextField.text?.isEmpty??false
+        saveButton.isEnabled = shouldEnableSaveButton
+    }
+    @IBAction func textEditingChanged(_ sender: UITextField) {
+        updateSaveButtonState()
+    }
+}
