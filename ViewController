@@ -1,0 +1,81 @@
+//
+//  ViewController.swift
+//  ToDo 2
+//
+//  Created by Joel Walker on 5/3/22.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let savedToDos = ToDo.loadToDos() {
+            todos = savedToDos
+        } else {
+            todos = ToDo.loadSampleToDos()
+        }
+        
+        // Do any additional setup after loading the view.
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dueDatePickerView.date = Date().addingTimeInterval(24*60*60)
+        updateDueDateLabel(date: dueDatePickerView.date)
+        updateSaveButtonState()
+        
+    var isDatePickerHidden = true
+    let dateLabelIndexPath = IndexPath(row: 0, section: 1)
+    let datePickerIndexPath = IndexPath(row: 1, section: 1)
+    let notesIndexPath = IndexPath(row: 0, section: 2)
+        
+    override func tableView (_ tableView: UITableView,
+                             heightforRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath {
+        case datePickerIndexPath where isDatePickerHidden == true:
+            return 0
+        case notesIndexPath:
+            return 200
+        default:
+            return UITableView.automaticDimension
+        }
+    }
+        override func tableView(_ tableView: UITableView, didSelectRowAt
+                                indexPath: IndexPath) {
+            isDatePickerHidden.toggle()
+            dueDateLabel.textColor = .black
+            updateDueDateLabel(date: dueDatePickerView.date)
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?){
+        super.prepare(for: segue, sender: sender)
+        
+        guard segue.identifier == "saveUnwind" else { return }
+        
+        let title = titleTextField.text!
+        let isComplete = isCompleteButton.isSelected
+        let dueDate = dueDatePickerView.date
+        let notes = notesTextView.text
+        
+        todo = ToDo(title: title, isComplete: isComplete, dueDate: dueDate, notes: notes)
+        
+        @IBAction func unwindToDoList (segue: UIStoryboardSegue) {
+            guard segue.identifier == "saveUnwind" else { return }
+            let sourceViewController = segue.source as!
+                ToDoTableViewController
+            
+            if let todo = sourceViewController.todos {
+                let newIndexPath = IndexPath (row: todos.count, section: 0)
+                
+                todos.append(todo)
+                tableView.insertRows(at: [newIndexPath], with: .automatic)
+            }
+        }
+    }
+    
+}
+navigationItem.leftBarButtonItem = editButtonItem
