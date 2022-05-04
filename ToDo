@@ -1,0 +1,67 @@
+//
+//  ToDo.swift
+//  ToDo 2
+//
+//  Created by Joel Walker on 5/3/22.
+//
+
+import Foundation
+import UIKit
+struct ToDo : Equatable {
+    let id = UUID()
+    var title: String
+    var isComplete: Bool
+    var dueDate: Date
+    var notes: String?
+    
+    static func ==(lhs: ToDo, rhs: ToDo) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+static func loadToDos() -> [ToDo]? {
+    return nil
+}
+
+static func loadSampleToDos () -> [ToDo] {
+    let todo1 = ToDo (title: "ToDo One", isComplete: false,
+                      dueDate:(), notes: "Notes 1")
+    let todo2 = ToDo (title: "ToDo Two", isComplete: false,
+                      dueDate:(), notes: "Notes 2")
+    let todo3 = ToDo (title: "ToDo Three", isComplete: false,
+                      dueDate:(), notes: "Notes 3")
+    
+    return [todo1, todo2, todo3]
+}
+//
+static let dueDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .short
+    return formatter
+}()
+override  func viewDidLoad() {
+    super.viewDidLoad()
+    updateDueDateLabel(date: dueDatePickerView.date)
+    updateSaveButtonState()
+}
+
+func updateDueDateLabel(date: Date) {
+    dueDateLabel.text = ToDo.dueDateFormatter.string(from: date)
+}
+@IBAction func datePickerChanged(_ sender: UIDatePicker) {
+    updateDueDateLabel(date: sender.date)
+}
+@IBSegueAction func editToDo(_ coder: NSCoder, sender: Any?)->
+ToDoTableViewController? {
+    guard let cell = sender as? UITableViewCell, let indexPath =
+            tableView.indexPath(for: cell) else {
+                return nil
+            }
+    tableView.deselectRow(at: indexPath, animated: true)
+    
+    let detailController = ToDoDetailTableViewController (coder: coder)
+    detailController?.todo = todos[indexPath.row]
+    
+    return detailController
+}
